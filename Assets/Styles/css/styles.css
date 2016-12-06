@@ -1,6 +1,9 @@
+#letter-list {
+  margin-bottom: 20px; }
+
 .letter-box {
   width: 25px;
-  height: 50px;
+  height: 40px;
   display: inline;
   font-size: 30px;
   font-weight: bold;
@@ -12,8 +15,9 @@
     display: inline;
     visibility: hidden; }
 
-#guesses {
-  margin-bottom: 20px; }
+#guess-list {
+  font-size: 30px;
+  font-weight: bold; }
 
 /*.space-box	{
 	width: 15px;

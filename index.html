@@ -9,7 +9,7 @@
 	<link rel="stylesheet" type="text/css" href="Assets/Styles/css/styles.css">
 </head>
 <body class="container-fluid">
-	<div id="guesses">
+	<div id="letter-list">
 		<div id="letter-menu">
 			<select id="alpha-list" name="alphabet">
 				<option disabled>Choose a letter</option>
@@ -17,7 +17,16 @@
 		</div>
 	</div>
 	<div id="game-board">
-		
+
+	</div>
+	<div id="letter-board">
+		<p id="guess-list"></p>
+	</div>
+	<div id="guess-counter">
+		<p>You have made </p>
+	</div>
+	<div id="miss-counter">
+		<p>You have <span id="misses-left"></span> miss<span id="misses-plural">es</span> remaining.</p>
 	</div>
 </body>
 </html>

@@ -1,10 +1,16 @@
 @import "colours";
 
+$letter-size: 30px;
+
+#letter-list	{
+	margin-bottom: 20px;
+}
+
 .letter-box	{
 	width: 25px;
-	height: 50px;
+	height: 40px;
 	display: inline;
-	font-size: 30px;
+	font-size: $letter-size;
 	font-weight: bold;
 	text-align: center;
 	padding: 5px;
@@ -16,8 +22,9 @@
 	}
 }
 
-#guesses	{
-	margin-bottom: 20px;
+#guess-list	{
+	font-size: $letter-size;
+	font-weight: bold;
 }
 
 /*.space-box	{

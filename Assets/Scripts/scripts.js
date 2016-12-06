@@ -30,14 +30,35 @@ $(document).ready(function() {
 		$("#alpha-list").append("<option class='letter' value='" + String.fromCharCode(i) + "'>" + String.fromCharCode(i) + "</option>");
 	}
 	$("#alpha-list").change (function()	{
-		guess = $("#alpha-list").val();
+		var guess = $("#alpha-list").val();
 		$(".letter").eq(guess.charCodeAt()-65).attr("disabled", "true");
+		$("#guess-list").append ("<span class='guessed-letter'>" + guess + "  </span>")
+		if (checkLetter(guess))	{
+			$(".guessed-letter").eq(guesses).css ("color", "green");
+		}	else	{
+			$(".guessed-letter").eq(guesses).css ("color", "red");
+			misses--;
+		}
+console.log($(".guessed-letter").eq(guesses));
+		guesses++;
 	});
-
+	
+	function checkLetter (char)	{
+		var goodGuess = false;
+		for (var i = 0; i < answerArray.length; i++) {
+			if (answerArray[i] === char)	{
+				$(".letter").eq(i).css("visibility: visible");
+				goodGuess = true;
+	console.log("found one");
+			}
+		}
+		return goodGuess;
+	}
 });
 
 var answer = "The Empire Strikes Back";
 var answerArray = [];
 var words = [];
 var thisWord = 1;
-var guess;
+var guesses = 0;
+var misses = 3;
