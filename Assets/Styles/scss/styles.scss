@@ -6,7 +6,7 @@ $letter-size: 30px;
 	margin-bottom: 20px;
 }
 
-#game-board	{
+#game-board	{	
 	/*display: flex;*/
 }
 
@@ -14,10 +14,10 @@ $letter-size: 30px;
 	width: 40px;
 	height: 50px;
 	display: inline-flex;
-	/*flex-direction: column;*/
 	font-size: $letter-size;
 	font-weight: bold;
 	text-align: center;
+	background-color: #c0c0c0;
 	padding: 0 5px 20px 5px;
 	border: $box;
 	margin: 10px 10px;
@@ -27,6 +27,16 @@ $letter-size: 30px;
 		display: inline;
 		visibility: hidden;
 	}
+}
+
+.spacer-box	{
+	width: 40px;
+	height: 50px;
+	display: inline-flex;
+	font-size: $letter-size;
+	padding: 0 5px 20px 5px;
+	margin: 10px 10px;
+
 }
 
 .guessed-letter	{

@@ -1,9 +1,14 @@
+// Global variables
 var gameGuesses = 6;
 var gameMisses = 3;
+var hitPoints = 10;
+var vowelCost = 20;
 var vowelIndices = [0,4,8,14,20];
-var movie = "Bloodsucking Freaks";
+var vowelASCIIs = [65,69,73,79,85];
+var movie = "Indiana Jones and the Temple of Doom";
 
 $(document).ready(function() {
+
 // Fill the alphabet menu
 	for (var i = 65; i <= 90; i++) {
 		$("#alpha-list").append("<option class='list-letter' value='" + String.fromCharCode(i) + "'>" + String.fromCharCode(i) + "</option>");
@@ -11,32 +16,6 @@ $(document).ready(function() {
 	for (var i = 0; i < vowelIndices.length; i++) {
 		$(".list-letter").eq(vowelIndices[i]).attr ("disabled", "true");
 	}
-
-// Fill the array with the letters of the string
-	// for (var i = 0; i < answer.length; i++) {
-	// 	if (answer[i] !== " ")	{
-	// 		answerArray.push (answer[i].toUpperCase());
-	// 		thisWord++;
-	// 	}	else	{
-	// 		words.push (thisWord);
-	// 		thisWord = 1;
-	// 	}
-	// }
-	// words.push (thisWord);
-
-// Create the game board
-	// var k = 0;
-	// for (var i = 0; i < words.length; i++)	{
-	// 	for (var j = 0; j < words[i]-1; j++)	{
-	// 		$("#game-board").append(
-	// 			"<div class='letter-box'>" +
-	// 				"<p class='letter'>" + answerArray[k] + "</p>" +
-	// 			"</div>");
-	// 		k++;
-	// 	}
-	// 	$("#game-board").append("<br>");
-	// }
-
 
 // create new Game instance and begin game
 	myGame = new Game (movie);
@@ -46,38 +25,9 @@ $(document).ready(function() {
 // Listen for a pick from the menu	
 	$("#alpha-list").change (function()	{
 		var guess = $("#alpha-list").val();
-		// $(".letter").eq(guess.charCodeAt()-65).attr("disabled", "true");
-		// $("#guess-list").append ("<span class='guessed-letter'>" + guess + "  </span>")
-		// if ()	{
-		// 	$(".guessed-letter").eq(guesses).css ("color", "green");
-		// }	else	{
-		// 	$(".guessed-letter").eq(guesses).css ("color", "red");
-		// 	misses--;
-		// }
-		// guesses++;
 		myGame.updateDisplay(guess, myGame.checkLetter(guess));
 	});
 	
-	// function checkLetter (char)	{
-	// 	var goodGuess = false;
-	// 	for (var x = 0; x < answerArray.length; x++) {
-	// 		if (answerArray[x] === char)	{
-	// 			$(".letter").eq(x).css("visibility", "visible");
-	// 			$(".letter").eq(x).show();
-	// 			goodGuess = true;
-	// 		}
-	// 	}
-	// 	return goodGuess;
-	// }
-
-
-
-
-// var answer = "I Spit On Your Grave";
-// var answerArray = [];
-// var words = [];
-// var thisWord = 1;
-
 
 });	// end document ready function
 
@@ -115,7 +65,11 @@ function Game (title)	{
 					"</div>");
 				k++;
 			}
-			$("#game-board").append("<br>");
+			if (i < this.words.length-1 && this.words[i] + this.words[i+1] < 10)	{
+				$("#game-board").append("<div class='spacer-box'></div>");			
+			}	else	{
+				$("#game-board").append("<br>");
+			}
 		}
 	};
 
@@ -133,7 +87,10 @@ function Game (title)	{
 		for (var i = 0; i < this.answerArray.length; i++) {
 			if (this.answerArray[i] === char)	{
 				$(".letter").eq(i).css("visibility", "visible");
-				$(".letter").eq(i).show();
+				$(".letter-box").eq(i).css("background-color", "#ffffff")
+				if (vowelIndices.indexOf(char.charCodeAt()-65) === -1)	{
+					this.points += hitPoints;
+				}
 				goodGuess = true;
 			}
 		}
@@ -141,7 +98,22 @@ function Game (title)	{
 	}	// end of checkLetter
 
 	this.updateDisplay = function (char, hit)	{
+		// Turn off the letter in the selector menu
 		$(".list-letter").eq (char.charCodeAt()-65).attr("disabled", "true");
+		
+		// If the letter is a vowel, deduct the cost
+		if (vowelIndices.indexOf(char.charCodeAt()-65) !== -1)	{
+			this.points -= vowelCost;
+		}
+
+		// If the player has enough points for a vowel, turn them on in the menu
+		if (this.points >= 20)	{
+			for (var i = 0; i < vowelIndices.length; i++) {
+				$(".list-letter").eq (vowelIndices[i]).attr("disabled", "false");
+			}
+		}
+
+		// Add the guessed letter to the list and colour it accordingly
 		$("#guess-list").append ("<span class='guessed-letter'>" + char + "    </span>")
 		if (hit)	{
 			$(".guessed-letter").eq (gameGuesses - this.guesses).css ("color", "green");
@@ -150,6 +122,8 @@ function Game (title)	{
 			this.misses--;
 		}
 		this.guesses--;
+
+		// Update the number of misses and guesses
 		$("#guesses-made").text (gameGuesses - this.guesses);
 		if (gameGuesses - this.guesses === 1)	{
 			$($(".plural")[0]).css ("display", "none");
