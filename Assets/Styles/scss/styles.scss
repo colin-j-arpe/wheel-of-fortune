@@ -6,20 +6,30 @@ $letter-size: 30px;
 	margin-bottom: 20px;
 }
 
+#game-board	{
+	/*display: flex;*/
+}
+
 .letter-box	{
-	width: 25px;
-	height: 40px;
-	display: inline;
+	width: 40px;
+	height: 50px;
+	display: inline-flex;
+	/*flex-direction: column;*/
 	font-size: $letter-size;
 	font-weight: bold;
 	text-align: center;
 	padding: 5px;
 	border: $box;
-	margin: 20px 10px;
+	margin: 10px 10px;
 	.letter 	{
+		min-width: 100%;
 		display: inline;
 		visibility: hidden;
 	}
+}
+
+.guessed-letter	{
+	color: blue;
 }
 
 #guess-list	{

@@ -27,7 +27,7 @@ $(document).ready(function() {
 
 // Fill the alphabet menu and listen for a pick
 	for (var i = 65; i <= 90; i++) {
-		$("#alpha-list").append("<option class='letter' value='" + String.fromCharCode(i) + "'>" + String.fromCharCode(i) + "</option>");
+		$("#alpha-list").append("<option class='list-letter' value='" + String.fromCharCode(i) + "'>" + String.fromCharCode(i) + "</option>");
 	}
 	$("#alpha-list").change (function()	{
 		var guess = $("#alpha-list").val();
@@ -39,20 +39,24 @@ $(document).ready(function() {
 			$(".guessed-letter").eq(guesses).css ("color", "red");
 			misses--;
 		}
-console.log($(".guessed-letter").eq(guesses));
 		guesses++;
+		updateCounters();
 	});
 	
 	function checkLetter (char)	{
 		var goodGuess = false;
-		for (var i = 0; i < answerArray.length; i++) {
-			if (answerArray[i] === char)	{
-				$(".letter").eq(i).css("visibility: visible");
+		for (var x = 0; x < answerArray.length; x++) {
+			if (answerArray[x] === char)	{
+				$(".letter").eq(x).css("visibility", "visible");
+				$(".letter").eq(x).show();
 				goodGuess = true;
-	console.log("found one");
 			}
 		}
 		return goodGuess;
+	}
+
+	function updateCounters	()	{
+
 	}
 });
 
