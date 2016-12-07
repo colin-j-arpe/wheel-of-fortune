@@ -1,8 +1,17 @@
 #letter-list {
-  margin-bottom: 20px; }
+  display: inline;
+  margin: 20px; }
 
 #game-board {
   /*display: flex;*/ }
+
+#score-display {
+  float: right;
+  font-size: 24px;
+  font-weight: bold; }
+  #score-display #current-points {
+    font-size: 40px;
+    font-weight: bolder; }
 
 .letter-box {
   width: 40px;
@@ -31,6 +40,12 @@
 
 .guessed-letter {
   color: blue; }
+
+#lose-message {
+  display: none; }
+
+#guess-message {
+  display: none; }
 
 #guess-list {
   font-size: 30px;

@@ -16,11 +16,20 @@
 			</select>
 		</div>
 	</div>
+	<div id="score-display">
+		<p><span id="current-points"></span>  points</p>
+	</div>
 	<div id="game-board">
 
 	</div>
 	<div id="letter-board">
 		<p id="guess-list"></p>
+	</div>
+	<div id="lose-message">
+		<p>Sorry, too many misses.  Try again.  <button id="reset-button">New game</button></p>
+	</div>
+	<div id="guess-message">
+		<p>OK, that's enough letters, time to solve the puzzle.</p>
 	</div>
 	<div id="guess-counter">
 		<p>You have made <span id="guesses-made">0</span> guess<span class="plural">es</span>.</p>
