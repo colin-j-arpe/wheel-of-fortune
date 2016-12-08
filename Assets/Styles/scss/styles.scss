@@ -2,9 +2,19 @@
 
 $letter-size: 30px;
 
+#try-again	{
+	display: none;
+	color: red;
+	font-weight: bold;
+}
+
 #letter-list	{
 	display: inline;
 	margin: 20px;
+}
+
+#solve-button	{
+	display: inline;
 }
 
 #game-board	{	
@@ -55,10 +65,21 @@ $letter-size: 30px;
 }
 
 #lose-message	{
+	font-size: 20px;
+	font-weight: bold;
 	display: none;
 }
 
 #guess-message	{
+	font-size: 20px;
+	font-weight: bold;
+	display: none;
+}
+
+#win-message	{
+	font-size: 20px;
+	font-weight: bold;
+	color: green;
 	display: none;
 }
 

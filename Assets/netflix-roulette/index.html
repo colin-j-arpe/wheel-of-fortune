@@ -1,0 +1,172 @@
+<!DOCTYPE HTML SYSTEM>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Get a random movie from the Netflix catalog and watch it instantly!">
+<meta name="author" content="Andrew Sampson">
+<meta name="keywords" content="Netflix Randomizer, random, randomizer, netflix,netflix roulette,movies,tv shows,tv,television,cinema,whattowatch,imdb,rotten tomatoes,stream,streaming,dvds,random netflix movie picker,random movie generator by genre,random netflix movie generator"/>
+<script type="text/javascript">
+//<![CDATA[
+try{if (!window.CloudFlare) {var CloudFlare=[{verbose:0,p:0,byc:0,owlid:"cf",bag2:1,mirage2:0,oracle:0,paths:{cloudflare:"/cdn-cgi/nexp/dok3v=1613a3a185/"},atok:"201aad983bca81d968ccb0a5db36215d",petok:"8ca8f187b49fb6e369e19a5b8c3c37c663471df6-1481075279-1800",zone:"netflixroulette.net",rocket:"0",apps:{"ga_key":{"ua":"UA-50129691-1","ga_bs":"2"}}}];!function(a,b){a=document.createElement("script"),b=document.getElementsByTagName("script")[0],a.async=!0,a.src="//ajax.cloudflare.com/cdn-cgi/nexp/dok3v=088620b277/cloudflare.min.js",b.parentNode.insertBefore(a,b)}()}}catch(e){};
+//]]>
+</script>
+<link rel="shortcut icon" href="favicon.ico">
+<link rel="apple-touch-icon" href="assets/launcher.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1, user-scalable=no, minimal-ui">
+<meta name="format-detection" content="telephone=no"/>
+<meta property="og:title" content="Netflix Roulette"/>
+<meta property="og:site_name" content="Netflix Roulette"/>
+<meta property="og:description" content="Get a random movie from the Netflix catalog and watch it instantly!"/>
+<meta property="og:image" content="assets/launcher.png"/>
+<title>Netflix Roulette</title>
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/style.css" rel="stylesheet">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600,700' rel='stylesheet' type='text/css'>
+ 
+<!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+ 
+<!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+<script type="text/javascript">
+/* <![CDATA[ */
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-50129691-1']);
+_gaq.push(['_trackPageview']);
+
+(function() {
+var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+
+(function(b){(function(a){"__CF"in b&&"DJS"in b.__CF?b.__CF.DJS.push(a):"addEventListener"in b?b.addEventListener("load",a,!1):b.attachEvent("onload",a)})(function(){"FB"in b&&"Event"in FB&&"subscribe"in FB.Event&&(FB.Event.subscribe("edge.create",function(a){_gaq.push(["_trackSocial","facebook","like",a])}),FB.Event.subscribe("edge.remove",function(a){_gaq.push(["_trackSocial","facebook","unlike",a])}),FB.Event.subscribe("message.send",function(a){_gaq.push(["_trackSocial","facebook","send",a])}));"twttr"in b&&"events"in twttr&&"bind"in twttr.events&&twttr.events.bind("tweet",function(a){if(a){var b;if(a.target&&a.target.nodeName=="IFRAME")a:{if(a=a.target.src){a=a.split("#")[0].match(/[^?=&]+=([^&]*)?/g);b=0;for(var c;c=a[b];++b)if(c.indexOf("url")===0){b=unescape(c.split("=")[1]);break a}}b=void 0}_gaq.push(["_trackSocial","twitter","tweet",b])}})})})(window);
+/* ]]> */
+</script>
+</head>
+<body>
+<div class="flash">
+<center><a href="https://play.google.com/store/apps/details?id=net.codeusa.netflixroulette" class="minibutton blue flash-action">The android app has been updated! Go enjoy it!</a>
+From the mind behind Netflix Roulette</center>
+</div>
+ 
+<div class="jumbotron">
+<div class="container">
+<img src="img/logo.png" alt="Netflix Roulette"/>
+</div>
+</div>
+<div class="input">
+<div class="container">
+<div class="row">
+<form name="filters" onsubmit='return compileMovieDB("core/compiler.php");'>
+<div class="col-xs-12 col-sm-4 col-md-4">
+<select class="btn btn-default dropdown-toggle genre-dropdown" id="sel_genre" name="sel_genre">
+<option value="All">All</option>
+<option value="Action & Adventure">Action & Adventure</option>
+<option value="Anime">Anime</option>
+<option value="Children & Family Movies">Children & Family</option>
+<option value="Classic Movies">Classic Movies</option>
+<option value="Comedies">Comedies</option>
+<option value="Documentaries">Documentaries</option>
+<option value="Dramas">Dramas</option>
+<option value="Faith and Spirituality">Faith & Spirtuality</option>
+<option value="Foreign Movies">Foreign Movies</option>
+<option value="Gay & Lesbian Movies">Gay & Lesbian</option>
+<option value="Horror Movies">Horror</option>
+<option value="Independent Movies">Independent Movies</option>
+<option value="Oscar-winning Movies">Oscar-winning</option>
+<option value="Romantic Movies">Romance</option>
+<option value="Sci-Fi & Fantasy">Sci-Fi & Fantasy</option>
+<option value="Sports Movies">Sports</option>
+<option value="Thrillers">Thrillers</option>
+<option value="TV Shows">TV Shows</option>
+</select>
+</div>
+<div class="col-xs-12 col-sm-2 col-md-3">
+<div class="checkbox">
+<label>
+<input checked id="chk_showmovies" name="chk_showmovies" type="checkbox">Show Movies
+</label>
+</div>
+</div>
+<div class="col-xs-12 col-sm-2 col-md-3">
+<div class="checkbox">
+<label>
+<input id="chk_showtv" name="chk_showtv" type="checkbox">Show TV Shows
+</label>
+</div>
+</div>
+<div class="col-xs-12 col-sm-4 col-md-2">
+<button type="button" class="btn btn-default btn-roll" onClick='compileMovieDB("core/compiler.php")'>Spin</button>
+</div>
+<div class="col-xs-12 col-sm-12 col-md-12 rating">
+<p><strong>Advanced options:</strong></p> Show results with a rating between
+<select id="lowrating" name="lowrate">
+<option value="1.0" selected>1</option>
+<option value="1.5">1.5</option>
+<option value="2.0">2</option>
+<option value="2.5">2.5</option>
+<option value="3.0">3</option>
+<option value="3.5">3.5</option>
+<option value="4.0">4</option>
+<option value="4.5">4.5</option>
+<option value="5.0">5</option>
+</select>
+and
+<select id="highrating" name="highrate">
+<option value="1.0">1</option>
+<option value="1.5">1.5</option>
+<option value="2.0">2</option>
+<option value="2.5">2.5</option>
+<option value="3.0">3</option>
+<option value="3.5">3.5</option>
+<option value="4.0">4</option>
+<option value="4.5">4.5</option>
+<option value="5.0" selected>5</option>
+</select>
+</div>
+<div class="col-xs-12 col-sm-12 col-md-12 rating">
+<p><strong>Filters:</strong></p>
+</div>
+<div class="col-xs-12 col-sm-12 col-md-4">
+<input type="text" id="dfield" class="form-control" placeholder="Director's name">
+</div>
+<div class="col-xs-12 col-sm-12 col-md-4">
+<input type="text" id="afield" class="form-control" placeholder="Actor's name">
+</div>
+<div class="col-xs-12 col-sm-12 col-md-4">
+<input type="text" id="kfield" class="form-control" placeholder="Keyword">
+</div>
+</form>
+</div>
+</div>
+</div>
+<div class="output">
+<div class="container">
+<div id="sponsor_container">
+<script src="http://go.adversal.com/ttj?id=2609728&size=728x90&promo_sizes=468x60,320x50,300x50,216x36" type="text/javascript"></script>
+</div>
+<div id="sentback">
+<center>
+<p>Select your preference and spin the wheel</p>
+</center>
+</div>
+<div id="sponsor_container2" class="col-xs-10 col-sm-4 col-md-4">
+<SCRIPT SRC="http://go.adversal.com/ttj?id=2609728&size=728x90&promo_sizes=468x60,320x50,300x50,216x36" TYPE="text/javascript"></SCRIPT>
+</div>
+</div>
+</div>
+ 
+ 
+<!-- <script src="js/jquery.js"></script>
+<script src="js/bootstrap.min.js"></script>
+ --><script src="app.js"></script>
+</body>
+</html>

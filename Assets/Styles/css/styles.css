@@ -1,6 +1,14 @@
+#try-again {
+  display: none;
+  color: red;
+  font-weight: bold; }
+
 #letter-list {
   display: inline;
   margin: 20px; }
+
+#solve-button {
+  display: inline; }
 
 #game-board {
   /*display: flex;*/ }
@@ -42,9 +50,19 @@
   color: blue; }
 
 #lose-message {
+  font-size: 20px;
+  font-weight: bold;
   display: none; }
 
 #guess-message {
+  font-size: 20px;
+  font-weight: bold;
+  display: none; }
+
+#win-message {
+  font-size: 20px;
+  font-weight: bold;
+  color: green;
   display: none; }
 
 #guess-list {

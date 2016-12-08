@@ -1,11 +1,12 @@
 // Global variables
-var gameGuesses = 2;
+var gameGuesses = 6;
 var gameMisses = 3;
 var hitPoints = 10;
 var vowelCost = 20;
 var vowelIndices = [0,4,8,14,20];
 var vowelASCIIs = [65,69,73,79,85];
-var movie = "The Lobster";
+// var movie = "Sophie's Choice";
+var keyPressed = "";
 
 $(document).ready(function() {
 
@@ -17,10 +18,21 @@ $(document).ready(function() {
 		$(".list-letter").eq(vowelIndices[i]).attr ("disabled", "true");
 	}
 
-// create new Game instance and begin game
-	myGame = new Game (movie);
-	myGame.createBoard();
-	myGame.resetMenu();
+// Get actor name
+	$("#actor-submit").on ("click", function () {
+		var actor = $("#actor-input").val();
+		var movie = searchMovies (actor);
+		if (movie === "")	{
+			$("#try-again").css ("display", "inline");
+		}	else 	{
+			$("#try-again").css ("display", "none");
+			// create new Game instance and begin game
+			myGame = new Game (movie);
+			myGame.createBoard();
+			myGame.resetMenu();
+		}
+	});
+
 
 // Listen for a pick from the menu	
 	$("#alpha-list").on ("change", function()	{
@@ -29,8 +41,17 @@ $(document).ready(function() {
 	});
 
 // Listen for the reset button to start a new game
-	$("#reset-button").on ("click", function() {
+	$(".reset-button").on ("click", function() {
+	});
 
+// Listen to the solve it button
+	$("#solve-button").on ("click", function ()	{
+		myGame.turnOffMenu();
+		myGame.colourBoardToSolve();
+		if (myGame.guessPuzzle(0))	{
+			$("#guess-message").css ("display", "none");
+			$("#win-message").css ("display", "block");
+		}
 	});
 	
 
@@ -44,6 +65,7 @@ function Game (title)	{
 	this.points = 0;
 	this.vowelsPicked = [];
 	this.correctLetters	= [];
+	this.unfinishedLetters = [];
 
 	// Create arrays of letters and word lengths from the string
 	this.fillArray = function (answer)	{
@@ -72,6 +94,11 @@ function Game (title)	{
 					"<div class='letter-box'>" +
 						"<p class='letter'>" + this.answerArray[k] + "</p>" +
 					"</div>");
+					if (this.answerArray[k].charCodeAt(0) < 65 || this.answerArray[k].charCodeAt(0) > 90)	{
+						$(".letter").eq(k).css("visibility", "visible");
+						$(".letter-box").eq(k).css("background-color", "#ffffff")
+						this.correctLetters.push (k);
+					}
 				k++;
 			}
 			// Keep short words on the same line, or add a line break
@@ -160,7 +187,10 @@ function Game (title)	{
 			$("#guess-message").css ("display", "block");
 			this.turnOffMenu();
 			this.colourBoardToSolve();
-			this.guessPuzzle(0);
+			if (this.guessPuzzle(0))	{
+				$("#guess-message").css ("display", "none");
+				$("#win-message").css ("display", "block");
+			}
 		}
 
 		// Update the number of misses and guesses displayed
@@ -186,35 +216,42 @@ function Game (title)	{
 		for (var i = 0; i < this.answerArray.length; i++) {
 			if (this.correctLetters.indexOf(i) === -1)	{
 				$(".letter-box").eq(i).css("background-color", "#b0b0ff")
+				this.unfinishedLetters.push (i);
 			}
 		}
 	}
 
+	// this.guessPuzzle = function (i)	{
+	// 	for (var i = 0; i < answerArray.length; i++) {
+	// 		if (this.answerArray[i]
+	// 	}
+	// }
+
+
+
 	this.guessPuzzle = function (i)	{
 		while (this.correctLetters.indexOf(i) !== -1)	{
-console.log(this.answerArray[i]);
 			if (i === this.answerArray.length)	{
 				return true;
 			}
 			i++;
 		}
-		$(".letter-box").eq(i).css("background-color", "#4040ff")
+		$(".letter-box").eq(i).css ("background-color", "#2020ff")
 		$(document).on ("keypress", function (event) {
-console.log(this.points);
-console.log(event.which);		;
-console.log((String.fromCharCode (event.which)).toUpperCase());
-console.log(this.answerArray[i]);
-			if ((String.fromCharCode (event.which)).toUpperCase() === this.answerArray[i])	{
-				$(".letter").eq(i).css("visibility", "visible");
-				$(".letter-box").eq(i).css("background-color", "#ffffff")
-				this.points += hitPoints;
-				$("#current-points").text (this.points);
-				this.guessPuzzle (i);
+			if ((String.fromCharCode (event.which)).toUpperCase() === myGame.answerArray[i])	{
+				myGame.correctLetters.push (i);
+				$(".letter").eq(i).css ("visibility", "visible");
+				$(".letter-box").eq(i).css ("background-color", "#ffffff")
+				myGame.points += hitPoints;
+				$("#current-points").text (myGame.points);
+				myGame.guessPuzzle (i);
 			}	else	{
 				return false;
 			}
 		});
-	}
+	}	// end of guessPuzzle function
+
+	// this.solveCheck 
 
 	this.loseGame = function ()	{
 		$("#lose-message").css ("display", "block");
@@ -224,3 +261,99 @@ console.log(this.answerArray[i]);
 	}
 
 }	// end of constructor function
+
+function searchMovies (name) {
+	var movieTitle = "a";
+	var shuffledMovies = [];
+	$.when($.ajax({
+		url: "http://netflixroulette.net/api/api.php?",
+		dataType: 'json',
+		data: {
+			actor: encodeURIComponent (name),
+			mediatype: 0,
+		},
+		success: function (response) {
+console.log(response);
+			shuffledMovies = response.sort(function() { return 0.5 - Math.random() });
+// 			var i = 0;
+// 			while (shuffledMovies[i].mediatype === 1) {
+// console.log(shuffledMovies[i].show_title);
+// console.log(movieTitle + " 1");
+// 				i++;
+// 				if (i === shuffledMovies.length)	{
+// 					return;
+// 				}
+// 			}
+console.log(movieTitle + " 2");
+		}
+	})).then (function () {
+		movieTitle = shuffledMovies[0].show_title;
+	});
+console.log("hello");
+console.log(movieTitle + " 3");
+	return movieTitle;
+}
+
+// (function (namespace) {
+//     'use strict'
+//     var API_URL = "http://netflixroulette.net/api/api.php?";
+
+//     namespace.createRequest = function (requestData, callback, parseAsXml) {
+//         parseAsXml = !! parseAsXml;
+//         if (typeof callback !== 'function') {
+//             throw new Error("The callback parameter was not a function");
+//         }
+//         var queryString = "type=" + (parseAsXml ? "xml" : "json");
+//         if (typeof requestData === 'string') {
+//             queryString += "&title=" + requestData;
+//         } else if (typeof requestData === 'object' && requestData.hasOwnProperty("title")) {
+//             queryString += "&title=" + requestData.title;
+
+//             if (requestData.hasOwnProperty("year")) {
+//                 queryString += "&year=" + requestData.year;
+//             }
+//         } else {
+//             throw new Error("I don't know how to handle " + requestData);
+//         }
+
+//         var httpReq = new XMLHttpRequest();
+//         httpReq.open("GET", API_URL + queryString.replace(/\s/ig, "%20"), true);
+//         httpReq.onreadystatechange = function () {
+//             if (httpReq.readyState !== 4) {
+//                 return;
+//             }
+
+//             if (httpReq.status !== 200) {
+//                 throw new Error("Unexpected HTTP Status Code (" + httpReq.status + ")");
+//             }
+
+//             callback(parseAsXml ? new DOMParser()
+//                 .parseFromString(httpReq.responseText, "text/xml") : JSON.parse(httpReq.responseText));
+//         };
+//         httpReq.send();
+//     };
+
+// })(window.netflixroulette || (window.netflixroulette = {}));
+
+// // Examples
+
+// // Requesting by title only
+// netflixroulette.createRequest("Breaking Bad", function (resp) {
+//     console.log("Breaking Bad's Summary = " + resp.summary);
+// });
+
+// // XML Response, resp is a document object
+// netflixroulette.createRequest({
+//     title: "The Boondocks",
+//     year: 2005
+// }, function (resp) {
+//     console.log("The Boondocks' Summary = " + resp.querySelector("netflixroulette summary").innerHTML);
+// }, true);
+
+// // JSON Response, resp is a JSON object
+// netflixroulette.createRequest({
+//     title: "The Boondocks",
+//     year: 2005
+// }, function (resp) {
+//     console.log("The Boondocks' Summary = " + resp.summary);
+// });
