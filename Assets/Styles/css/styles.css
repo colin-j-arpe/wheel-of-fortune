@@ -1,3 +1,6 @@
+body {
+  font-size: 20px; }
+
 #try-again {
   display: none;
   color: red;
@@ -15,17 +18,17 @@
 
 #score-display {
   float: right;
-  font-size: 24px;
+  font-size: 30px;
   font-weight: bold; }
   #score-display #current-points {
-    font-size: 40px;
+    font-size: 48px;
     font-weight: bolder; }
 
 .letter-box {
-  width: 40px;
-  height: 50px;
+  width: 48px;
+  height: 60px;
   display: inline-flex;
-  font-size: 30px;
+  font-size: 36px;
   font-weight: bold;
   text-align: center;
   background-color: #c0c0c0;
@@ -42,7 +45,7 @@
   width: 40px;
   height: 50px;
   display: inline-flex;
-  font-size: 30px;
+  font-size: 20px;
   padding: 0 5px 20px 5px;
   margin: 10px 10px; }
 
@@ -72,7 +75,7 @@
   display: none; }
 
 #guess-list {
-  font-size: 30px;
+  font-size: 36px;
   font-weight: bold; }
 
 /*.space-box	{

@@ -1,6 +1,10 @@
 @import "colours";
 
-$letter-size: 30px;
+$text-size: 20px;
+
+body	{
+	font-size: $text-size;
+}
 
 #try-again	{
 	display: none;
@@ -23,19 +27,19 @@ $letter-size: 30px;
 
 #score-display	{
 	float: right;
-	font-size: 24px;
+	font-size: 30px;
 	font-weight: bold;
 	#current-points	{
-		font-size: 40px;
+		font-size: 48px;
 		font-weight: bolder;
 	}
 }
 
 .letter-box	{
-	width: 40px;
-	height: 50px;
+	width: 48px;
+	height: 60px;
 	display: inline-flex;
-	font-size: $letter-size;
+	font-size: 36px;
 	font-weight: bold;
 	text-align: center;
 	background-color: #c0c0c0;
@@ -54,7 +58,7 @@ $letter-size: 30px;
 	width: 40px;
 	height: 50px;
 	display: inline-flex;
-	font-size: $letter-size;
+	font-size: $text-size;
 	padding: 0 5px 20px 5px;
 	margin: 10px 10px;
 
@@ -92,7 +96,7 @@ $letter-size: 30px;
 }
 
 #guess-list	{
-	font-size: $letter-size;
+	font-size: 36px;
 	font-weight: bold;
 }
 
