@@ -5,8 +5,6 @@ var hitPoints = 10;
 var vowelCost = 20;
 var vowelIndices = [0,4,8,14,20];
 var vowelASCIIs = [65,69,73,79,85];
-// var movie = "Sophie's Choice";
-// var keyPressed = "";
 
 $(document).ready(function() {
 
@@ -18,20 +16,11 @@ $(document).ready(function() {
 		$(".list-letter").eq(vowelIndices[i]).attr ("disabled", "true");
 	}
 
-// Get actor name
+// Get actor name, run api search; search function will create new game
 	$("#actor-submit").on ("click", function () {
 		var actor = $("#actor-input").val();
-		// location.reload();
-		var movie = searchMovies (actor);
-		if (movie === "")	{
-			$("#try-again").css ("display", "inline");
-		}	else 	{
-			$("#try-again").css ("display", "none");
-			// create new Game instance and begin game
-			// myGame = new Game (movie);
-			// myGame.createBoard();
-			// myGame.resetMenu();
-		}
+		$("#actor-submit").off ("click");
+		searchMovies (actor);
 	});
 
 
@@ -50,10 +39,7 @@ $(document).ready(function() {
 	$("#solve-button").on ("click", function ()	{
 		myGame.turnOffMenu();
 		myGame.colourBoardToSolve();
-		if (myGame.guessPuzzle(0))	{
-			$("#guess-message").css ("display", "none");
-			$("#win-message").css ("display", "block");
-		}
+		myGame.guessPuzzle(0);
 	});
 	
 
@@ -137,6 +123,8 @@ function Game (title)	{
 			this.points -= vowelCost;
 			this.vowelsPicked.push (char.charCodeAt()-65);
 		}
+
+		// Check the puzzle and reveal the letters
 		for (var i = 0; i < this.answerArray.length; i++) {
 			if (this.answerArray[i] === char)	{
 				$(".letter").eq(i).css("visibility", "visible");
@@ -189,10 +177,7 @@ function Game (title)	{
 			$("#guess-message").css ("display", "block");
 			this.turnOffMenu();
 			this.colourBoardToSolve();
-			if (this.guessPuzzle(0))	{
-				$("#guess-message").css ("display", "none");
-				$("#win-message").css ("display", "block");
-			}
+			this.guessPuzzle(0);
 		}
 
 		// Update the number of misses and guesses displayed
@@ -224,28 +209,37 @@ function Game (title)	{
 	}
 
 	this.guessPuzzle = function (i)	{
-		while (this.correctLetters.indexOf(i) !== -1)	{
-			if (i === this.answerArray.length)	{
-				return true;
-			}
-			i++;
+		var self = this;
+		let j = i;
+		// Skip ahead to the next un-revealed letter, or to the end if finished
+		while (this.correctLetters.indexOf(j) !== -1)	{
+			j++;
 		}
-		$(".letter-box").eq(i).css ("background-color", "#2020ff")
+		if (j >= this.answerArray.length)	{
+			this.winGame();
+			return;
+		}
+
+		// At the next un-revealed letter, colour the box and listen to the keyboard
+		$(".letter-box").eq(j).css ("background-color", "#2020ff")
 		$(document).on ("keypress", function (event) {
-			if ((String.fromCharCode (event.which)).toUpperCase() === myGame.answerArray[i])	{
-				myGame.correctLetters.push (i);
-				$(".letter").eq(i).css ("visibility", "visible");
-				$(".letter-box").eq(i).css ("background-color", "#ffffff")
-				myGame.points += hitPoints;
-				$("#current-points").text (myGame.points);
-				myGame.guessPuzzle (i);
+			// Check if the lette is correct, update the board, call the solution function recursively
+			if ((String.fromCharCode (event.which)).toUpperCase() === self.answerArray[j])	{
+				self.correctLetters.push (j);
+				$(".letter").eq(j).css ("visibility", "visible");
+				$(".letter-box").eq(j).css ("background-color", "#ffffff")
+				self.points += hitPoints;
+				$("#current-points").text (self.points);
+				// Turn off the keyboard listener; another will run in the next recursive call
+				$(document).off ("keypress");
+				self.guessPuzzle (j+1);
+				return true;
 			}	else	{
-				return false;
+				self.wrongAnswer();
 			}
+			return;
 		});
 	}	// end of guessPuzzle function
-
-	// this.solveCheck 
 
 	this.loseGame = function ()	{
 		$("#lose-message").css ("display", "block");
@@ -254,11 +248,24 @@ function Game (title)	{
 		$("#current-points").text (this.points);
 	}
 
+	this.wrongAnswer = function ()	{
+		$("#wrong-message").css ("display", "block");
+		this.turnOffMenu();
+		points = 0;
+		$("#current-points").text (this.points);
+	}
+
+	this.winGame = function () {
+		$("#guess-message").css ("display", "none");
+		$("#win-message").css ("display", "block");
+		$(document).off ("keypress");
+	}
 }	// end of constructor function
 
 function searchMovies (name) {
 	var movieTitle = "a";
 	var shuffledMovies = [];
+	// Go get array of movies from the API
 	$.when($.ajax({
 		url: "http://netflixroulette.net/api/api.php?",
 		dataType: 'json',
@@ -267,89 +274,19 @@ function searchMovies (name) {
 			mediatype: 0,
 		},
 		success: function (response) {
-console.log(response);
 			shuffledMovies = response.sort(function() { return 0.5 - Math.random() });
-// 			var i = 0;
-// 			while (shuffledMovies[i].mediatype === 1) {
-// 				i++;
-// 				if (i === shuffledMovies.length)	{
-// 					return;
-// 				}
-// 			}
-console.log(movieTitle + " 2");
 		}
 	})).then (function () {
-		movieTitle = shuffledMovies[0].show_title;
+		var i = 0;
+		// Filter out TV shows; movies only
+		while (shuffledMovies[i].mediatype > 0)	{
+			i++;
+		}
+		movieTitle = shuffledMovies[i].show_title;
+		// Create instance of game and away we go
 		myGame = new Game (movieTitle);
 		myGame.createBoard();
 		myGame.resetMenu();
 
 	});
-console.log("hello");
-console.log(movieTitle + " 3");
-	return movieTitle;
-}
-
-// (function (namespace) {
-//     'use strict'
-//     var API_URL = "http://netflixroulette.net/api/api.php?";
-
-//     namespace.createRequest = function (requestData, callback, parseAsXml) {
-//         parseAsXml = !! parseAsXml;
-//         if (typeof callback !== 'function') {
-//             throw new Error("The callback parameter was not a function");
-//         }
-//         var queryString = "type=" + (parseAsXml ? "xml" : "json");
-//         if (typeof requestData === 'string') {
-//             queryString += "&title=" + requestData;
-//         } else if (typeof requestData === 'object' && requestData.hasOwnProperty("title")) {
-//             queryString += "&title=" + requestData.title;
-
-//             if (requestData.hasOwnProperty("year")) {
-//                 queryString += "&year=" + requestData.year;
-//             }
-//         } else {
-//             throw new Error("I don't know how to handle " + requestData);
-//         }
-
-//         var httpReq = new XMLHttpRequest();
-//         httpReq.open("GET", API_URL + queryString.replace(/\s/ig, "%20"), true);
-//         httpReq.onreadystatechange = function () {
-//             if (httpReq.readyState !== 4) {
-//                 return;
-//             }
-
-//             if (httpReq.status !== 200) {
-//                 throw new Error("Unexpected HTTP Status Code (" + httpReq.status + ")");
-//             }
-
-//             callback(parseAsXml ? new DOMParser()
-//                 .parseFromString(httpReq.responseText, "text/xml") : JSON.parse(httpReq.responseText));
-//         };
-//         httpReq.send();
-//     };
-
-// })(window.netflixroulette || (window.netflixroulette = {}));
-
-// // Examples
-
-// // Requesting by title only
-// netflixroulette.createRequest("Breaking Bad", function (resp) {
-//     console.log("Breaking Bad's Summary = " + resp.summary);
-// });
-
-// // XML Response, resp is a document object
-// netflixroulette.createRequest({
-//     title: "The Boondocks",
-//     year: 2005
-// }, function (resp) {
-//     console.log("The Boondocks' Summary = " + resp.querySelector("netflixroulette summary").innerHTML);
-// }, true);
-
-// // JSON Response, resp is a JSON object
-// netflixroulette.createRequest({
-//     title: "The Boondocks",
-//     year: 2005
-// }, function (resp) {
-//     console.log("The Boondocks' Summary = " + resp.summary);
-// });
+}	// End of API call and instance creator function

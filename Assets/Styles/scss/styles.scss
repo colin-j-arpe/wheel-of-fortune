@@ -83,6 +83,14 @@ $letter-size: 30px;
 	display: none;
 }
 
+#wrong-message	{
+	font-size: 20px;
+	font-weight: bold;
+	color: red;
+	display: none;
+
+}
+
 #guess-list	{
 	font-size: $letter-size;
 	font-weight: bold;
