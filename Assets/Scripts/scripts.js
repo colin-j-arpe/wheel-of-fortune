@@ -6,7 +6,7 @@ var vowelCost = 20;
 var vowelIndices = [0,4,8,14,20];
 var vowelASCIIs = [65,69,73,79,85];
 // var movie = "Sophie's Choice";
-var keyPressed = "";
+// var keyPressed = "";
 
 $(document).ready(function() {
 
@@ -21,15 +21,16 @@ $(document).ready(function() {
 // Get actor name
 	$("#actor-submit").on ("click", function () {
 		var actor = $("#actor-input").val();
+		// location.reload();
 		var movie = searchMovies (actor);
 		if (movie === "")	{
 			$("#try-again").css ("display", "inline");
 		}	else 	{
 			$("#try-again").css ("display", "none");
 			// create new Game instance and begin game
-			myGame = new Game (movie);
-			myGame.createBoard();
-			myGame.resetMenu();
+			// myGame = new Game (movie);
+			// myGame.createBoard();
+			// myGame.resetMenu();
 		}
 	});
 
@@ -42,6 +43,7 @@ $(document).ready(function() {
 
 // Listen for the reset button to start a new game
 	$(".reset-button").on ("click", function() {
+		location.reload();
 	});
 
 // Listen to the solve it button
@@ -221,14 +223,6 @@ function Game (title)	{
 		}
 	}
 
-	// this.guessPuzzle = function (i)	{
-	// 	for (var i = 0; i < answerArray.length; i++) {
-	// 		if (this.answerArray[i]
-	// 	}
-	// }
-
-
-
 	this.guessPuzzle = function (i)	{
 		while (this.correctLetters.indexOf(i) !== -1)	{
 			if (i === this.answerArray.length)	{
@@ -277,8 +271,6 @@ console.log(response);
 			shuffledMovies = response.sort(function() { return 0.5 - Math.random() });
 // 			var i = 0;
 // 			while (shuffledMovies[i].mediatype === 1) {
-// console.log(shuffledMovies[i].show_title);
-// console.log(movieTitle + " 1");
 // 				i++;
 // 				if (i === shuffledMovies.length)	{
 // 					return;
@@ -288,6 +280,10 @@ console.log(movieTitle + " 2");
 		}
 	})).then (function () {
 		movieTitle = shuffledMovies[0].show_title;
+		myGame = new Game (movieTitle);
+		myGame.createBoard();
+		myGame.resetMenu();
+
 	});
 console.log("hello");
 console.log(movieTitle + " 3");
