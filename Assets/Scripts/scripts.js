@@ -20,14 +20,14 @@ $(document).ready(function() {
 	$("#actor-submit").on ("click", function () {
 		var actor = $("#actor-input").val();
 		$("#actor-submit").off ("click");
-		searchMovies (actor);
+		searchMovies (actor);	// line 268
 	});
 
 
 // Listen for a pick from the menu	
 	$("#alpha-list").on ("change", function()	{
 		var guess = $("#alpha-list").val();
-		myGame.updateDisplay(guess, myGame.checkLetter(guess));
+		myGame.updateDisplay(guess, myGame.checkLetter(guess));	// uD line 145, cL line 120
 	});
 
 // Listen for the reset button to start a new game
@@ -82,6 +82,7 @@ function Game (title)	{
 					"<div class='letter-box'>" +
 						"<p class='letter'>" + this.answerArray[k] + "</p>" +
 					"</div>");
+					// Turn on visibility for anything that's not a letter
 					if (this.answerArray[k].charCodeAt(0) < 65 || this.answerArray[k].charCodeAt(0) > 90)	{
 						$(".letter").eq(k).css("visibility", "visible");
 						$(".letter-box").eq(k).css("background-color", "#ffffff")
@@ -90,7 +91,7 @@ function Game (title)	{
 				k++;
 			}
 			// Keep short words on the same line, or add a line break
-			if (i < this.words.length-1 && this.words[i] + this.words[i+1] < 10)	{
+			if (i < this.words.length-1 && this.words[i] + this.words[i+1] < 8)	{
 				$("#game-board").append("<div class='spacer-box'></div>");			
 			}	else	{
 				$("#game-board").append("<br>");
@@ -166,19 +167,8 @@ function Game (title)	{
 		}	else	{
 			$(".guessed-letter").eq (gameGuesses - this.guesses).css ("color", "red");
 			this.misses--;
-			// If too many misses, game over
-			if (this.misses === 0)	{
-				this.loseGame();
-			}
 		}
 		this.guesses--;
-		// If too many guesses, time to solve
-		if (this.guesses === 0)	{
-			$("#guess-message").css ("display", "block");
-			this.turnOffMenu();
-			this.colourBoardToSolve();
-			this.guessPuzzle(0);
-		}
 
 		// Update the number of misses and guesses displayed
 		$("#guesses-made").text (gameGuesses - this.guesses);
@@ -197,6 +187,19 @@ function Game (title)	{
 		// Update points display
 		$("#current-points").text (this.points);
 
+		// If too many misses, game over
+		if (this.misses === 0)	{
+			this.loseGame();	// line 248
+			return;
+		}
+		// If too many guesses, time to solve
+		if (this.guesses === 0)	{
+			$("#guess-message").css ("display", "block");
+			this.turnOffMenu();			// line 114
+			this.colourBoardToSolve();	// line 205
+			this.guessPuzzle(0);		// line 214
+			return;
+		}
 	}	// end of updateDisplay
 
 	this.colourBoardToSolve = function ()	{
@@ -216,14 +219,14 @@ function Game (title)	{
 			j++;
 		}
 		if (j >= this.answerArray.length)	{
-			this.winGame();
+			this.winGame();		// line 262
 			return;
 		}
 
 		// At the next un-revealed letter, colour the box and listen to the keyboard
 		$(".letter-box").eq(j).css ("background-color", "#2020ff")
 		$(document).on ("keypress", function (event) {
-			// Check if the lette is correct, update the board, call the solution function recursively
+			// Check if the letter is correct, update the board, call the solution function recursively
 			if ((String.fromCharCode (event.which)).toUpperCase() === self.answerArray[j])	{
 				self.correctLetters.push (j);
 				$(".letter").eq(j).css ("visibility", "visible");
@@ -232,10 +235,11 @@ function Game (title)	{
 				$("#current-points").text (self.points);
 				// Turn off the keyboard listener; another will run in the next recursive call
 				$(document).off ("keypress");
-				self.guessPuzzle (j+1);
+				self.guessPuzzle (j+1);		// line 214
 				return true;
 			}	else	{
-				self.wrongAnswer();
+				$(document).off ("keypress");
+				self.wrongAnswer();			// line 255
 			}
 			return;
 		});
@@ -243,14 +247,14 @@ function Game (title)	{
 
 	this.loseGame = function ()	{
 		$("#lose-message").css ("display", "block");
-		this.turnOffMenu();
+		this.turnOffMenu();		// line 114
 		points = 0;
 		$("#current-points").text (this.points);
 	}
 
 	this.wrongAnswer = function ()	{
 		$("#wrong-message").css ("display", "block");
-		this.turnOffMenu();
+		this.turnOffMenu();		// line 114
 		points = 0;
 		$("#current-points").text (this.points);
 	}
@@ -260,7 +264,7 @@ function Game (title)	{
 		$("#win-message").css ("display", "block");
 		$(document).off ("keypress");
 	}
-}	// end of constructor function
+}	// end of Game constructor function
 
 function searchMovies (name) {
 	var movieTitle = "a";
@@ -284,9 +288,9 @@ function searchMovies (name) {
 		}
 		movieTitle = shuffledMovies[i].show_title;
 		// Create instance of game and away we go
-		myGame = new Game (movieTitle);
-		myGame.createBoard();
-		myGame.resetMenu();
+		myGame = new Game (movieTitle);	// line  48
+		myGame.createBoard();			// line  77
+		myGame.resetMenu();				// line 103
 
 	});
-}	// End of API call and instance creator function
+}	// end of searchMovies
