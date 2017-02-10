@@ -83,11 +83,11 @@ function Game (title)	{
 						"<p class='letter'>" + this.answerArray[k] + "</p>" +
 					"</div>");
 					// Turn on visibility for anything that's not a letter
-					if (this.answerArray[k].charCodeAt(0) < 65 || this.answerArray[k].charCodeAt(0) > 90)	{
-						$(".letter").eq(k).css("visibility", "visible");
-						$(".letter-box").eq(k).css("background-color", "#ffffff")
-						this.correctLetters.push (k);
-					}
+				if (this.answerArray[k].charCodeAt(0) < 65 || this.answerArray[k].charCodeAt(0) > 90)	{
+					$(".letter").eq(k).css("visibility", "visible");
+					$(".letter-box").eq(k).css("background-color", "#ffffff")
+					this.correctLetters.push (k);
+				}
 				k++;
 			}
 			// Keep short words on the same line, or add a line break
