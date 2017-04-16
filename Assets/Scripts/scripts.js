@@ -279,6 +279,10 @@ function searchMovies (name) {
 		},
 		success: function (response) {
 			shuffledMovies = response.sort(function() { return 0.5 - Math.random() });
+		},
+		error: function () {
+			alert("Actor not found.");
+			location.reload();
 		}
 	})).then (function () {
 		var i = 0;
