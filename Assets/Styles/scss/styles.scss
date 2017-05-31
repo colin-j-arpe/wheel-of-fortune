@@ -1,9 +1,31 @@
 @import "colours";
 
 $text-size: 20px;
+$head-ht:	80px;
 
 body	{
 	font-size: $text-size;
+	background-color: $bodyback;
+}
+
+#page-head	{
+	background-color: $headback;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: $head-ht;
+	margin: 0;
+	display: block;
+
+	h1	{
+		font-weight: bolder;
+		text-align: center;
+	}
+}
+
+#actor-entry	{
+	margin-top: ($head-ht + 20);
 }
 
 #try-again	{
