@@ -1,6 +1,6 @@
 body {
   font-size: 20px;
-  background-color: #ddffdd; }
+  background-color: #eeffee; }
 
 #page-head {
   background-color: #aaddaa;
@@ -13,7 +13,8 @@ body {
   display: block; }
   #page-head h1 {
     font-weight: bolder;
-    text-align: center; }
+    text-align: center;
+    color: #116611; }
 
 #actor-entry {
   margin-top: 100px; }
@@ -94,6 +95,21 @@ body {
 #guess-list {
   font-size: 36px;
   font-weight: bold; }
+
+#instruc-modal {
+  width: 600px;
+  height: 450px;
+  position: fixed;
+  left: 25%;
+  top: 25%;
+  font-size: 12pt;
+  background-color: #aaddaa;
+  padding: 8px;
+  border: 4pt double #116611; }
+  #instruc-modal h2 {
+    margin-top: 0; }
+  #instruc-modal #close-button {
+    float: right; }
 
 /*.space-box	{
 	width: 15px;

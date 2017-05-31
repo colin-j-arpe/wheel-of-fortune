@@ -7,6 +7,14 @@ var vowelIndices = [0,4,8,14,20];
 var vowelASCIIs = [65,69,73,79,85];
 
 $(document).ready(function() {
+// Fill in and close modal window 
+	$("#letter-score").text(hitPoints);
+	$("#vowel-cost").text(vowelCost);
+	$("#guesses-allowed").text(gameGuesses);
+	$("#misses-allowed").text(gameMisses);
+	$("#close-button").on("click", function()	{
+		$("#instruc-modal").css({"display":"none"});
+	});
 
 // Fill the alphabet menu, vowels disabled
 	for (var i = 65; i <= 90; i++) {
