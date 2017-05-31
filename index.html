@@ -55,5 +55,14 @@
 	<div id="miss-counter">
 		<p>You have <span id="misses-left">3</span> miss<span class="plural">es</span> remaining.</p>
 	</div>
+	<div id="instruc-modal">
+		<h2>Instructions</h2>
+		<button id="close-button">&times;</button>
+		<p>Enter an actor's name on the text field at the top of the page.  The gtame will generate a puzzle board with the title of a movie in which that actor starred.  If the actor isn't found, try entering another name.</p>
+		<p>Begin guessing letters in the title by selecting a letter from the menu.  You'll receive <span id="letter-score"></span> points for each of that letter that appears in the title.  Once you've accumulated more than <span id="vowel-cost"></span> points, you can buy a vowel.  Each vowel pick costs <span id="vowel-cost"></span> points, regardless of how many appear in the title.</p>
+		<p>If you think you know the title, click the <b>Solve It</b> button to enter the rest of your guess.  Type carefully!  One wrong letter ends the game.</p>
+		<p>When entering your final guess, you'll get points for each remaining letter based on how many letters you guesses during the game.</p>
+		<p>Once you've picked <span id="guesses-allowed"></span> letters, vowels or consonants, you'll have to make a guess.  If you pick <span id="misses-allowed"></span> letters that aren't in the title, you lose the game.</p>
+	</div>
 </body>
 </html>
