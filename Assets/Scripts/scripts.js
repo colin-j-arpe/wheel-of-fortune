@@ -1,36 +1,34 @@
 // Global variables
-var gameGuesses = 6;
-var gameMisses = 3;
-var hitPoints = 10;
-var vowelCost = 20;
+var GUESSES = 6;
+var MISSES = 3;
+var HIT_POINTS = 10;
+var VOWEL_COST = 20;
 var vowelIndices = [0,4,8,14,20];
 var vowelASCIIs = [65,69,73,79,85];
 
 $(document).ready(function() {
+// DOM referents
+	submitButton = $("#actor-submit");
+
 // Fill in and close modal window 
-	$("#letter-score").text(hitPoints);
-	$("#vowel-cost").text(vowelCost);
-	$("#guesses-allowed").text(gameGuesses);
-	$("#misses-allowed").text(gameMisses);
+	$("#letter-score").text(HIT_POINTS);
+	$("#vowel-cost").text(VOWEL_COST);
+	$("#guesses-allowed").text(GUESSES);
+	$("#misses-allowed").text(MISSES);
 	$("#close-button").on("click", function()	{
 		$("#instruc-modal").css({"display":"none"});
+		$("#actor-input").focus();
 	});
-
-// Fill the alphabet menu, vowels disabled
-	for (var i = 65; i <= 90; i++) {
-		$("#alpha-list").append("<option class='list-letter' value='" + String.fromCharCode(i) + "'>" + String.fromCharCode(i) + "</option>");
-	}
-	for (var i = 0; i < vowelIndices.length; i++) {
-		$(".list-letter").eq(vowelIndices[i]).attr ("disabled", "true");
-	}
 
 // Get actor name, run api search; search function will create new game
-	$("#actor-submit").on ("click", function () {
+	submitButton.removeAttr ("disabled");
+	submitButton.on ("click", function () {
 		var actor = $("#actor-input").val();
-		$("#actor-submit").off ("click");
+		submitButton.off ("click");
+		submitButton.attr ("disabled", "true");
+		$
 		searchMovies (actor);	// line 268
 	});
-
 
 // Listen for a pick from the menu	
 	$("#alpha-list").on ("change", function()	{
@@ -54,17 +52,31 @@ $(document).ready(function() {
 });	// end document ready function
 
 function Game (title)	{
+	// Variables
 	this.answer = title;
 	this.words = [];
-	this.guesses = gameGuesses;
-	this.misses = gameMisses;
+	this.guesses = GUESSES;
+	this.misses = MISSES;
 	this.points = 0;
 	this.vowelsPicked = [];
 	this.correctLetters	= [];
 	this.unfinishedLetters = [];
 
+	// Functions
+	this.fillArray = fillArray;
+	this.createBoard = createBoard;
+	this.resetMenu = resetMenu;
+	this.turnOffMenu = turnOffMenu;
+	this.checkLetter = checkLetter;
+	this.updateDisplay = updateDisplay;
+	this.colourBoardToSolve = colourBoardToSolve;
+	this.guessPuzzle = guessPuzzle;
+	this.loseGame = loseGame;
+	this.wrongAnswer = wrongAnswer;
+	this.winGame = winGame;
+
 	// Create arrays of letters and word lengths from the string
-	this.fillArray = function (answer)	{
+	function fillArray (answer)	{
 		var thisWord = 1;
 		var array = [];
 		for (var i = 0; i < answer.length; i++) {
@@ -82,7 +94,7 @@ function Game (title)	{
 	this.answerArray = this.fillArray (title);
 
 	// Build the game board from the letter array
-	this.createBoard = function ()	{
+	function createBoard()	{
 		var k = 0;
 		for (var i = 0; i < this.words.length; i++)	{
 			for (var j = 0; j < this.words[i]-1; j++)	{
@@ -105,11 +117,23 @@ function Game (title)	{
 				$("#game-board").append("<br>");
 			}
 		}
+		// Fill the alphabet menu, vowels disabled
+		for (var i = 65; i <= 77; i++) {
+			$("#alpha-list").append("<span class='list-letter'> " + String.fromCharCode(i) + " </span>");
+		}
+		$("#alpha-list").append("<br>")
+		for (var i = 78; i <= 90; i++) {
+			$("#alpha-list").append("<span class='list-letter'> " + String.fromCharCode(i) + " </span>");
+		}
+		for (var i = 0; i < vowelIndices.length; i++) {
+			$(".list-letter").eq(vowelIndices[i]).addClass ("disabled");
+		}
+
 		$("#current-points").text (this.points);
 	};
 
 	// Set the selector menu back to its initial state, with vowels turned off
-	this.resetMenu = function ()	{
+	function resetMenu()	{
 		for (var i = 0; i < 26; i++) {
 			$(".list-letter").eq(i).removeAttr ("disabled");
 		}
@@ -119,17 +143,17 @@ function Game (title)	{
 	};
 
 	// Disallow all letters in the selector menu
-	this.turnOffMenu = function ()	{
+	function turnOffMenu()	{
 		for (var i = 0; i < 26; i++) {
 			$(".list-letter").eq(i).attr ("disabled", "true");
 		}
 	}
 
-	this.checkLetter = function (char)	{
+	function checkLetter (char)	{
 		var goodGuess = false;
 		// If the letter is a vowel, deduct the cost and add to picked list
 		if (vowelIndices.indexOf(char.charCodeAt()-65) !== -1)	{
-			this.points -= vowelCost;
+			this.points -= VOWEL_COST;
 			this.vowelsPicked.push (char.charCodeAt()-65);
 		}
 
@@ -140,7 +164,7 @@ function Game (title)	{
 				$(".letter-box").eq(i).css("background-color", "#ffffff")
 				// If the letter is a consonant, award points for each hit
 				if (vowelIndices.indexOf(char.charCodeAt()-65) === -1)	{
-					this.points += hitPoints;
+					this.points += HIT_POINTS;
 				}
 				// Add this instance of the letter to the array of correct guesses
 				this.correctLetters.push (i);
@@ -150,7 +174,7 @@ function Game (title)	{
 		return goodGuess;
 	}	// end of checkLetter
 
-	this.updateDisplay = function (char, hit)	{
+	function updateDisplay (char, hit)	{
 		// Turn off the letter in the selector menu
 		$(".list-letter").eq (char.charCodeAt()-65).attr("disabled", "true");
 		
@@ -171,16 +195,16 @@ function Game (title)	{
 		// Add the guessed letter to the list and colour it accordingly
 		$("#guess-list").append ("<span class='guessed-letter'>" + char + "    </span>")
 		if (hit)	{
-			$(".guessed-letter").eq (gameGuesses - this.guesses).css ("color", "green");
+			$(".guessed-letter").eq (GUESSES - this.guesses).css ("color", "green");
 		}	else	{
-			$(".guessed-letter").eq (gameGuesses - this.guesses).css ("color", "red");
+			$(".guessed-letter").eq (GUESSES - this.guesses).css ("color", "red");
 			this.misses--;
 		}
 		this.guesses--;
 
 		// Update the number of misses and guesses displayed
-		$("#guesses-made").text (gameGuesses - this.guesses);
-		if (gameGuesses - this.guesses === 1)	{
+		$("#guesses-made").text (GUESSES - this.guesses);
+		if (GUESSES - this.guesses === 1)	{
 			$($(".plural")[0]).css ("display", "none");
 		}	else	{
 			$($(".plural")[0]).css ("display", "inline");
@@ -210,7 +234,7 @@ function Game (title)	{
 		}
 	}	// end of updateDisplay
 
-	this.colourBoardToSolve = function ()	{
+	function colourBoardToSolve()	{
 		for (var i = 0; i < this.answerArray.length; i++) {
 			if (this.correctLetters.indexOf(i) === -1)	{
 				$(".letter-box").eq(i).css("background-color", "#b0b0ff")
@@ -219,7 +243,7 @@ function Game (title)	{
 		}
 	}
 
-	this.guessPuzzle = function (i)	{
+	function guessPuzzle (i)	{
 		var self = this;
 		let j = i;
 		// Skip ahead to the next un-revealed letter, or to the end if finished
@@ -239,7 +263,7 @@ function Game (title)	{
 				self.correctLetters.push (j);
 				$(".letter").eq(j).css ("visibility", "visible");
 				$(".letter-box").eq(j).css ("background-color", "#ffffff")
-				self.points += hitPoints;
+				self.points += HIT_POINTS;
 				$("#current-points").text (self.points);
 				// Turn off the keyboard listener; another will run in the next recursive call
 				$(document).off ("keypress");
@@ -253,21 +277,21 @@ function Game (title)	{
 		});
 	}	// end of guessPuzzle function
 
-	this.loseGame = function ()	{
+	function loseGame()	{
 		$("#lose-message").css ("display", "block");
 		this.turnOffMenu();		// line 114
 		points = 0;
 		$("#current-points").text (this.points);
 	}
 
-	this.wrongAnswer = function ()	{
+	function wrongAnswer()	{
 		$("#wrong-message").css ("display", "block");
 		this.turnOffMenu();		// line 114
 		points = 0;
 		$("#current-points").text (this.points);
 	}
 
-	this.winGame = function () {
+	function winGame() {
 		$("#guess-message").css ("display", "none");
 		$("#win-message").css ("display", "block");
 		$(document).off ("keypress");

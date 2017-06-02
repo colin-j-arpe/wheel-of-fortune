@@ -16,6 +16,12 @@ body {
     text-align: center;
     color: #116611; }
 
+.list-letter {
+  font-size: 36px;
+  color: #222222; }
+  .list-letter .disabled {
+    color: #cccccc; }
+
 #actor-entry {
   margin-top: 100px; }
 
@@ -35,7 +41,8 @@ body {
   /*display: flex;*/ }
 
 #score-display {
-  float: right;
+  /*float: right;*/
+  display: inline;
   font-size: 30px;
   font-weight: bold; }
   #score-display #current-points {

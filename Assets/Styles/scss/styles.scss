@@ -1,6 +1,7 @@
 @import "colours";
 
 $text-size: 20px;
+$letter-size:	36px;
 $head-ht:	80px;
 
 body	{
@@ -22,6 +23,15 @@ body	{
 		font-weight: bolder;
 		text-align: center;
 		color: $dkgreen;
+	}
+}
+
+.list-letter	{
+	font-size: $letter-size;
+	color:	$ltr-avail;
+
+	.disabled	{
+		color:	$ltr-disab;
 	}
 }
 
@@ -49,7 +59,8 @@ body	{
 }
 
 #score-display	{
-	float: right;
+	/*float: right;*/
+	display: inline;
 	font-size: 30px;
 	font-weight: bold;
 	#current-points	{
@@ -92,33 +103,33 @@ body	{
 }
 
 #lose-message	{
-	font-size: 20px;
+	font-size: $text-size;
 	font-weight: bold;
 	display: none;
 }
 
 #guess-message	{
-	font-size: 20px;
+	font-size: $text-size;
 	font-weight: bold;
 	display: none;
 }
 
 #win-message	{
-	font-size: 20px;
+	font-size: $text-size;
 	font-weight: bold;
 	color: green;
 	display: none;
 }
 
 #wrong-message	{
-	font-size: 20px;
+	font-size: $text-size;
 	font-weight: bold;
 	color: red;
 	display: none;
 }
 
 #guess-list	{
-	font-size: 36px;
+	font-size: $letter-size;	
 	font-weight: bold;
 }
 
