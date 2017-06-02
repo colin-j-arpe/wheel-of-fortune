@@ -8,10 +8,11 @@ var vowelASCIIs = [65,69,73,79,85];
 
 $(document).ready(function() {
 // DOM referents
-	submitButton = $("#actor-submit");
+	submitButton = 	$("#actor-submit");
+	solveButton =	$("#solve-button");
 
 // Fill in and close modal window 
-	$("#letter-score").text(HIT_POINTS);
+	$("#letter-score").text(HIT_POINTS);	
 	$("#vowel-cost").text(VOWEL_COST);
 	$("#guesses-allowed").text(GUESSES);
 	$("#misses-allowed").text(MISSES);
@@ -19,6 +20,16 @@ $(document).ready(function() {
 		$("#instruc-modal").css({"display":"none"});
 		$("#actor-input").focus();
 	});
+
+	// Fill the alphabet menu, vowels disabled
+	for (var i = 65; i <= 90; i++) {
+		$("#alpha-list").append(" <span class='list-letter'>" + String.fromCharCode(i) + "</span> ");
+		if (i == 77)
+			$("#alpha-list").append("<br>");
+	}
+	for (var i = 0; i < vowelIndices.length; i++) {
+		$(".list-letter").eq(vowelIndices[i]).addClass ("disabled");
+	}
 
 // Get actor name, run api search; search function will create new game
 	submitButton.removeAttr ("disabled");
@@ -31,10 +42,13 @@ $(document).ready(function() {
 	});
 
 // Listen for a pick from the menu	
-	$("#alpha-list").on ("change", function()	{
-		var guess = $("#alpha-list").val();
-		myGame.updateDisplay(guess, myGame.checkLetter(guess));	// uD line 145, cL line 120
-	});
+	$(".list-letter").each (function(i)	{
+		$(this).on ("click", function()	{
+console.log($(".list-letter").eq(i).text()[0]);
+			var guess = $(".list-letter").eq(i).text()[0];
+			myGame.updateDisplay(guess, myGame.checkLetter(guess));	// uD line 145, cL line 120
+		});
+	}); 
 
 // Listen for the reset button to start a new game
 	$(".reset-button").on ("click", function() {
@@ -42,7 +56,7 @@ $(document).ready(function() {
 	});
 
 // Listen to the solve it button
-	$("#solve-button").on ("click", function ()	{
+	solveButton.on ("click", function ()	{
 		myGame.turnOffMenu();
 		myGame.colourBoardToSolve();
 		myGame.guessPuzzle(0);
@@ -117,17 +131,6 @@ function Game (title)	{
 				$("#game-board").append("<br>");
 			}
 		}
-		// Fill the alphabet menu, vowels disabled
-		for (var i = 65; i <= 77; i++) {
-			$("#alpha-list").append("<span class='list-letter'> " + String.fromCharCode(i) + " </span>");
-		}
-		$("#alpha-list").append("<br>")
-		for (var i = 78; i <= 90; i++) {
-			$("#alpha-list").append("<span class='list-letter'> " + String.fromCharCode(i) + " </span>");
-		}
-		for (var i = 0; i < vowelIndices.length; i++) {
-			$(".list-letter").eq(vowelIndices[i]).addClass ("disabled");
-		}
 
 		$("#current-points").text (this.points);
 	};
@@ -150,6 +153,7 @@ function Game (title)	{
 	}
 
 	function checkLetter (char)	{
+console.log(char);
 		var goodGuess = false;
 		// If the letter is a vowel, deduct the cost and add to picked list
 		if (vowelIndices.indexOf(char.charCodeAt()-65) !== -1)	{

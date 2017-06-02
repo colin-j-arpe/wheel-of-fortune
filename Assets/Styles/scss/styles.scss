@@ -29,6 +29,7 @@ body	{
 .list-letter	{
 	font-size: $letter-size;
 	color:	$ltr-avail;
+	font-weight: bolder;
 
 	.disabled	{
 		color:	$ltr-disab;
@@ -37,6 +38,10 @@ body	{
 
 #actor-entry	{
 	margin-top: ($head-ht + 20);
+}
+
+button.disabled	{
+	color: $ltr-disab;
 }
 
 #try-again	{
