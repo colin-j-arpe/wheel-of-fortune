@@ -31,17 +31,18 @@ body	{
 	color:	$ltr-avail;
 	font-weight: bolder;
 
-	.disabled	{
-		color:	$ltr-disab;
-	}
 }
+
+	.selectable:hover{
+		color: $ltr-hover;
+	}
 
 #actor-entry	{
 	margin-top: ($head-ht + 20);
 }
 
 button.disabled	{
-	color: $ltr-disab;
+	color: grey;
 }
 
 #try-again	{

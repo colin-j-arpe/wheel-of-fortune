@@ -27,9 +27,9 @@ $(document).ready(function() {
 		if (i == 77)
 			$("#alpha-list").append("<br>");
 	}
-	for (var i = 0; i < vowelIndices.length; i++) {
-		$(".list-letter").eq(vowelIndices[i]).addClass ("disabled");
-	}
+	// for (var i = 0; i < vowelIndices.length; i++) {
+	// 	$(".list-letter").eq(vowelIndices[i]).removeClass ("selectable");
+	// }
 
 // Get actor name, run api search; search function will create new game
 	submitButton.removeAttr ("disabled");
@@ -40,15 +40,6 @@ $(document).ready(function() {
 		$
 		searchMovies (actor);	// line 268
 	});
-
-// Listen for a pick from the menu	
-	$(".list-letter").each (function(i)	{
-		$(this).on ("click", function()	{
-console.log($(".list-letter").eq(i).text()[0]);
-			var guess = $(".list-letter").eq(i).text()[0];
-			myGame.updateDisplay(guess, myGame.checkLetter(guess));	// uD line 145, cL line 120
-		});
-	}); 
 
 // Listen for the reset button to start a new game
 	$(".reset-button").on ("click", function() {
@@ -79,6 +70,8 @@ function Game (title)	{
 	// Functions
 	this.fillArray = fillArray;
 	this.createBoard = createBoard;
+	this.turnOnLetter = turnOnLetter;
+	this.turnOffLetter = turnOffLetter;
 	this.resetMenu = resetMenu;
 	this.turnOffMenu = turnOffMenu;
 	this.checkLetter = checkLetter;
@@ -131,9 +124,28 @@ function Game (title)	{
 				$("#game-board").append("<br>");
 			}
 		}
+		// Listen for a pick from the menu	
+		for (var i = 0; i < 26; i++)	{
+			if (vowelIndices.indexOf(i) === -1)
+				this.turnOnLetter($(".list-letter").eq(i));
+		} 
 
 		$("#current-points").text (this.points);
 	};
+
+	function turnOnLetter(letter)	{
+		$(letter).addClass ("selectable");
+		$(letter).on ("click", function()	{
+console.log($(letter).text()[0]);
+			var guess = $(letter).text()[0];
+			myGame.updateDisplay(guess, myGame.checkLetter(guess));	// uD line 145, cL line 120
+		});
+	}
+
+	function turnOffLetter(letter)	{
+		$(letter).removeClass ("selectable");
+		$(letter).off ("click");
+	}
 
 	// Set the selector menu back to its initial state, with vowels turned off
 	function resetMenu()	{
@@ -180,19 +192,21 @@ console.log(char);
 
 	function updateDisplay (char, hit)	{
 		// Turn off the letter in the selector menu
-		$(".list-letter").eq (char.charCodeAt()-65).attr("disabled", "true");
+		turnOffLetter($(".list-letter").eq (char.charCodeAt()-65));
 		
 		// If the player has enough points for a vowel, turn them on or off in the menu
 		if (this.points >= 20)	{
 			for (var i = 0; i < vowelIndices.length; i++) {
-				$(".list-letter").eq (vowelIndices[i]).removeAttr("disabled");
+				var vowel = $(".list-letter").eq (vowelIndices[i]);
+				$(vowel).addClass ("selectable");
+				turnOnLetter(vowel);
 			}
 			for (var i = 0; i < this.vowelsPicked.length; i++) {
-				$(".list-letter").eq(this.vowelsPicked[i]).attr ("disabled", "true");
+				turnOffLetter($(".list-letter").eq(this.vowelsPicked[i]));
 			}
 		}	else	{
 			for (var i = 0; i < vowelIndices.length; i++) {
-				$(".list-letter").eq(vowelIndices[i]).attr ("disabled", "true");
+				turnOffLetter($(".list-letter").eq(vowelIndices[i]));
 			}
 		}
 

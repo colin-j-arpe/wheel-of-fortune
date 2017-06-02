@@ -18,16 +18,17 @@ body {
 
 .list-letter {
   font-size: 36px;
-  color: #222222;
+  color: #bbbbbb;
   font-weight: bolder; }
-  .list-letter .disabled {
-    color: #cccccc; }
+
+.selectable:hover {
+  color: #444444; }
 
 #actor-entry {
   margin-top: 100px; }
 
 button.disabled {
-  color: #cccccc; }
+  color: grey; }
 
 #try-again {
   display: none;
