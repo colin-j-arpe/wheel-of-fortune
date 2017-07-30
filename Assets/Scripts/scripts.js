@@ -279,7 +279,7 @@ function searchMovies (name) {
 	var shuffledMovies = [];
 	// Go get array of movies from the API
 	$.when($.ajax({
-		url: "http://netflixroulette.net/api/api.php?",
+		url: "https://netflixroulette.net/api/api.php?",
 		dataType: 'json',
 		data: {
 			actor: encodeURIComponent (name),
