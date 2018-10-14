@@ -84,6 +84,33 @@ body	{
 	margin: 20px;
 }
 
+#alpha-list	{
+	position: relative;
+	
+	::after 	{
+		content: " ";
+		position: absolute;
+		top: 100%;
+		left: 0;
+		width: 100%;
+		height: 200%;
+		background-color: transparent;
+	}
+}
+
+.list-letter	{
+	cursor: pointer;
+	padding: 0.5rem;
+	font-size: 36px;
+	font-weight: 700;
+	color: #555;
+
+	&.disabled	{
+		cursor: default;
+		color: #bbb;
+	}
+}
+
 #solve-button	{
 	display: inline;
 }
@@ -113,6 +140,7 @@ body	{
 	padding: 0 5px 20px 5px;
 	border: $box;
 	margin: 10px 10px;
+
 	.letter 	{
 		min-width: 100%;
 		padding-bottom: 10px;

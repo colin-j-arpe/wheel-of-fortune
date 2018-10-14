@@ -19,6 +19,7 @@ $(document).ready(function() {
 
 // Fill in page 
 	$("#actor-input").val("");
+	$("#actor-input").focus();
 	$("#letter-score").text(hitPoints);
 	$("#vowel-cost").text(vowelCost);
 	$("#guesses-allowed").text(gameGuesses);
@@ -26,10 +27,12 @@ $(document).ready(function() {
 
 // Fill the alphabet menu, vowels disabled
 	for (var i = 65; i <= 90; i++) {
-		$("#alpha-list").append("<option class='list-letter' value='" + String.fromCharCode(i) + "'>" + String.fromCharCode(i) + "</option>");
+		$("#alpha-list").append(`<span class='list-letter'>${String.fromCharCode(i)}</span>`);
+		// $("#alpha-list").append("<option class='list-letter' value='" + String.fromCharCode(i) + "'>" + String.fromCharCode(i) + "</option>");
 	}
 	for (var i = 0; i < vowelIndices.length; i++) {
-		$(".list-letter").eq(vowelIndices[i]).attr ("disabled", "true");
+		$(".list-letter").eq(vowelIndices[i]).addClass("disabled");
+		// $(".list-letter").eq(vowelIndices[i]).attr ("disabled", "true");
 	}
 
 // Get actor name, run api search; search function will create new game
@@ -50,11 +53,17 @@ $(document).ready(function() {
 		}
 	});
 
-// Listen for a pick from the menu	
-	$("#alpha-list").on ("change", function()	{
-		var guess = $("#alpha-list").val();
+// Listen for a pick from the letter menu	
+	$(".list-letter").click((e) => {
+		$letter = $(e.currentTarget);
+		if ($letter.hasClass("disabled")) return;
+		const guess = $letter.text();
 		thisGame.updateDisplay(guess, thisGame.checkLetter(guess));	// uD line 145, cL line 120
-	});
+	})
+	// $("#alpha-list").on ("change", function()	{
+	// 	var guess = $("#alpha-list").val();
+	// 	thisGame.updateDisplay(guess, thisGame.checkLetter(guess));	// uD line 145, cL line 120
+	// });
 
 // Listen for the reset button to start a new game
 	$(".reset-button").on ("click", function() {
@@ -84,6 +93,8 @@ class Game 	{
 		this.unfinishedLetters = [];
 
 		this.answerArray = this.fillArray(this.answer);
+		this.createBoard();
+		this.resetMenu();
 	}
 
 	// Create arrays of letters and word lengths from the string
@@ -175,19 +186,19 @@ class Game 	{
 
 	updateDisplay(char, hit)	{
 		// Turn off the letter in the selector menu
-		$(".list-letter").eq (char.charCodeAt()-65).attr("disabled", "true");
+		$(".list-letter").eq (char.charCodeAt()-65).addClass("disabled");
 		
 		// If the player has enough points for a vowel, turn them on or off in the menu
 		if (this.points >= 20)	{
 			for (var i = 0; i < vowelIndices.length; i++) {
-				$(".list-letter").eq (vowelIndices[i]).removeAttr("disabled");
+				$(".list-letter").eq (vowelIndices[i]).removeClass("disabled");
 			}
 			for (var i = 0; i < this.vowelsPicked.length; i++) {
-				$(".list-letter").eq(this.vowelsPicked[i]).attr ("disabled", "true");
+				$(".list-letter").eq(this.vowelsPicked[i]).addClass("disabled");
 			}
 		}	else	{
 			for (var i = 0; i < vowelIndices.length; i++) {
-				$(".list-letter").eq(vowelIndices[i]).attr ("disabled", "true");
+				$(".list-letter").eq(vowelIndices[i]).addClass("disabled");
 			}
 		}
 
@@ -393,9 +404,8 @@ function getMovie(actorId)	{
 		success: (response) => {
 			let titleArray = response.results.sort(function() { return 0.5 - Math.random() });
 			thisGame = new Game (titleArray[0].title);	// line  48
-			thisGame.createBoard();			// line  77
-			thisGame.resetMenu();				// line 103
-
+			// thisGame.createBoard();			// line  77
+			// thisGame.resetMenu();				// line 103
 		}
 	});
 }
