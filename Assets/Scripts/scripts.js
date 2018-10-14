@@ -1,20 +1,28 @@
 // Global variables
-var gameGuesses = 6;
-var gameMisses = 3;
-var hitPoints = 10;
-var vowelCost = 20;
-var vowelIndices = [0,4,8,14,20];
-var vowelASCIIs = [65,69,73,79,85];
+const gameGuesses = 6;
+const gameMisses = 3;
+const hitPoints = 10;
+const vowelCost = 20;
+const vowelIndices = [0,4,8,14,20];
+const vowelASCIIs = [65,69,73,79,85];
 
 $(document).ready(function() {
-// Fill in and close modal window 
+//	Check if instructons have been shown
+	if (!sessionStorage.getItem("instructionsHaveBeenShown")) {
+		$("#instruc-modal").show();
+		$("#close-button").on("click", function()	{
+			sessionStorage.setItem("instructionsHaveBeenShown", true);
+			$("#instruc-modal").hide();
+			$("#actor-input").focus();
+		});
+	}
+
+// Fill in page 
+	$("#actor-input").val("");
 	$("#letter-score").text(hitPoints);
 	$("#vowel-cost").text(vowelCost);
 	$("#guesses-allowed").text(gameGuesses);
 	$("#misses-allowed").text(gameMisses);
-	$("#close-button").on("click", function()	{
-		$("#instruc-modal").css({"display":"none"});
-	});
 
 // Fill the alphabet menu, vowels disabled
 	for (var i = 65; i <= 90; i++) {
@@ -25,17 +33,27 @@ $(document).ready(function() {
 	}
 
 // Get actor name, run api search; search function will create new game
-	$("#actor-submit").on ("click", function () {
-		var actor = $("#actor-input").val();
-		$("#actor-submit").off ("click");
-		searchMovies (actor);	// line 268
-	});
+	// $("#actor-submit").on ("click", function () {
+	// 	var actor = $("#actor-input").val();
+	// 	$("#actor-submit").off ("click");
+	// 	searchMovies (actor);	// line 268
+	// });
 
+//	Listen to typing in actor name field
+	$("#actor-input").on("keyup", (e) => {
+		const actorLetters = $(e.currentTarget).val();
+		if (actorLetters.length > 2)	{
+			$("#result-list").show();
+			getActorList(actorLetters);
+		}	else	{
+			$("#result-list").hide();
+		}
+	});
 
 // Listen for a pick from the menu	
 	$("#alpha-list").on ("change", function()	{
 		var guess = $("#alpha-list").val();
-		myGame.updateDisplay(guess, myGame.checkLetter(guess));	// uD line 145, cL line 120
+		thisGame.updateDisplay(guess, thisGame.checkLetter(guess));	// uD line 145, cL line 120
 	});
 
 // Listen for the reset button to start a new game
@@ -45,26 +63,31 @@ $(document).ready(function() {
 
 // Listen to the solve it button
 	$("#solve-button").on ("click", function ()	{
-		myGame.turnOffMenu();
-		myGame.colourBoardToSolve();
-		myGame.guessPuzzle(0);
+		thisGame.turnOffMenu();
+		thisGame.colourBoardToSolve();
+		thisGame.guessPuzzle(0);
 	});
 	
 
 });	// end document ready function
 
-function Game (title)	{
-	this.answer = title;
-	this.words = [];
-	this.guesses = gameGuesses;
-	this.misses = gameMisses;
-	this.points = 0;
-	this.vowelsPicked = [];
-	this.correctLetters	= [];
-	this.unfinishedLetters = [];
+class Game 	{
+	constructor(title)	{
+		this.answer = title;
+		this.words = [];
+		this.guesses = gameGuesses;
+		this.misses = gameMisses;
+		this.points = 0;
+		this.solvePoints = hitPoints;
+		this.vowelsPicked = [];
+		this.correctLetters	= [];
+		this.unfinishedLetters = [];
+
+		this.answerArray = this.fillArray(this.answer);
+	}
 
 	// Create arrays of letters and word lengths from the string
-	this.fillArray = function (answer)	{
+	fillArray(answer)	{
 		var thisWord = 1;
 		var array = [];
 		for (var i = 0; i < answer.length; i++) {
@@ -79,10 +102,9 @@ function Game (title)	{
 		this.words.push (thisWord);
 		return array;
 	}
-	this.answerArray = this.fillArray (title);
 
 	// Build the game board from the letter array
-	this.createBoard = function ()	{
+	createBoard()	{
 		var k = 0;
 		for (var i = 0; i < this.words.length; i++)	{
 			for (var j = 0; j < this.words[i]-1; j++)	{
@@ -109,7 +131,7 @@ function Game (title)	{
 	};
 
 	// Set the selector menu back to its initial state, with vowels turned off
-	this.resetMenu = function ()	{
+	resetMenu()	{
 		for (var i = 0; i < 26; i++) {
 			$(".list-letter").eq(i).removeAttr ("disabled");
 		}
@@ -119,13 +141,14 @@ function Game (title)	{
 	};
 
 	// Disallow all letters in the selector menu
-	this.turnOffMenu = function ()	{
+	turnOffMenu()	{
 		for (var i = 0; i < 26; i++) {
 			$(".list-letter").eq(i).attr ("disabled", "true");
 		}
 	}
 
-	this.checkLetter = function (char)	{
+	checkLetter(char)	{
+		this.solvePoints--;
 		var goodGuess = false;
 		// If the letter is a vowel, deduct the cost and add to picked list
 		if (vowelIndices.indexOf(char.charCodeAt()-65) !== -1)	{
@@ -150,7 +173,7 @@ function Game (title)	{
 		return goodGuess;
 	}	// end of checkLetter
 
-	this.updateDisplay = function (char, hit)	{
+	updateDisplay(char, hit)	{
 		// Turn off the letter in the selector menu
 		$(".list-letter").eq (char.charCodeAt()-65).attr("disabled", "true");
 		
@@ -210,7 +233,7 @@ function Game (title)	{
 		}
 	}	// end of updateDisplay
 
-	this.colourBoardToSolve = function ()	{
+	colourBoardToSolve()	{
 		for (var i = 0; i < this.answerArray.length; i++) {
 			if (this.correctLetters.indexOf(i) === -1)	{
 				$(".letter-box").eq(i).css("background-color", "#b0b0ff")
@@ -219,7 +242,7 @@ function Game (title)	{
 		}
 	}
 
-	this.guessPuzzle = function (i)	{
+	guessPuzzle(i)	{
 		var self = this;
 		let j = i;
 		// Skip ahead to the next un-revealed letter, or to the end if finished
@@ -239,7 +262,7 @@ function Game (title)	{
 				self.correctLetters.push (j);
 				$(".letter").eq(j).css ("visibility", "visible");
 				$(".letter-box").eq(j).css ("background-color", "#ffffff")
-				self.points += hitPoints;
+				self.points += self.solvePoints;
 				$("#current-points").text (self.points);
 				// Turn off the keyboard listener; another will run in the next recursive call
 				$(document).off ("keypress");
@@ -253,56 +276,126 @@ function Game (title)	{
 		});
 	}	// end of guessPuzzle function
 
-	this.loseGame = function ()	{
+	loseGame()	{
 		$("#lose-message").css ("display", "block");
 		this.turnOffMenu();		// line 114
 		points = 0;
 		$("#current-points").text (this.points);
 	}
 
-	this.wrongAnswer = function ()	{
+	wrongAnswer()	{
 		$("#wrong-message").css ("display", "block");
 		this.turnOffMenu();		// line 114
 		points = 0;
 		$("#current-points").text (this.points);
 	}
 
-	this.winGame = function () {
+	winGame() {
 		$("#guess-message").css ("display", "none");
 		$("#win-message").css ("display", "block");
 		$(document).off ("keypress");
 	}
-}	// end of Game constructor function
+}	// end of Game class definition
 
-function searchMovies (name) {
-	var movieTitle = "a";
-	var shuffledMovies = [];
-	// Go get array of movies from the API
-	$.when($.ajax({
-		url: "https://netflixroulette.net/api/api.php?",
-		dataType: 'json',
+// function searchMovies (name) {
+// 	var movieTitle = "a";
+// 	var shuffledMovies = [];
+// 	// Go get array of movies from the API
+// 	$.when($.ajax({
+// 		url: "https://netflixroulette.net/api/api.php?",
+// 		dataType: 'json',
+// 		data: {
+// 			actor: encodeURIComponent (name),
+// 			mediatype: 0,
+// 		},
+// 		success: function (response) {
+// 			shuffledMovies = response.sort(function() { return 0.5 - Math.random() });
+// 		},
+// 		error: function () {
+// 			alert("Actor not found.");
+// 			location.reload();
+// 		}
+// 	})).then (function () {
+// 		var i = 0;
+// 		// Filter out TV shows; movies only
+// 		while (shuffledMovies[i].mediatype > 0)	{
+// 			i++;
+// 		}
+// 		movieTitle = shuffledMovies[i].show_title;
+// 		// Create instance of game and away we go
+// 		thisGame = new Game (movieTitle);	// line  48
+// 		thisGame.createBoard();			// line  77
+// 		thisGame.resetMenu();				// line 103
+
+// 	});
+// }	// end of searchMovies
+
+function getActorList(searchString)	{
+	$.ajax({
+		url: "https://api.themoviedb.org/3/search/person?",
+		dataType: "json",
 		data: {
-			actor: encodeURIComponent (name),
-			mediatype: 0,
+			api_key: "e04b0dc7a2c29fc352575a94acd2b47c",
+			language: "en_US",
+			include_adult: false,
+			query: searchString
 		},
-		success: function (response) {
-			shuffledMovies = response.sort(function() { return 0.5 - Math.random() });
-		},
-		error: function () {
+		error: () => {
 			alert("Actor not found.");
 			location.reload();
+		},
+		success: (response) => {
+			$("#result-list").html("");
+			let resultList = "<ul>";
+			$(response.results).each((i, result) => {
+				// const nextLi = document.createElement("li");
+				const nextLi = `<li class="result-list__item" data-actor-id="${result.id}">${result.name}</li>`;
+				// $(nextLi).addClass("result-list__item");
+				// $(nextLi).text(result.name);
+				resultList += nextLi;
+			});
+			resultList += "</ul>";
+			$("#result-list").append(resultList);
+			listenToResultList();
 		}
-	})).then (function () {
-		var i = 0;
-		// Filter out TV shows; movies only
-		while (shuffledMovies[i].mediatype > 0)	{
-			i++;
-		}
-		movieTitle = shuffledMovies[i].show_title;
-		// Create instance of game and away we go
-		myGame = new Game (movieTitle);	// line  48
-		myGame.createBoard();			// line  77
-		myGame.resetMenu();				// line 103
-
 	});
-}	// end of searchMovies
+}
+
+function listenToResultList()	{
+	$(".result-list__item").click((e) => {
+		$("#result-list").hide();
+		const actorName = $(e.currentTarget).text().trim();
+		const actorId = $(e.currentTarget).data("actorId");
+
+		//	Put the actor's name in the text field
+		//	and turn it off
+		$("#actor-input").val(actorName);
+		$("#actor-input").prop("disabled", true);
+
+		getMovie(actorId);
+	});
+}
+
+function getMovie(actorId)	{
+	$.ajax({
+		url: "https://api.themoviedb.org/3/discover/movie?",
+		dataType: "json",
+		data: {
+			api_key: "e04b0dc7a2c29fc352575a94acd2b47c",
+			language: "en_US",
+			include_adult: false,
+			sort_by: "vote_count.desc",
+			with_cast: actorId			
+		},
+		error: () => {
+			alert("Actor not found.");
+		},
+		success: (response) => {
+			let titleArray = response.results.sort(function() { return 0.5 - Math.random() });
+			thisGame = new Game (titleArray[0].title);	// line  48
+			thisGame.createBoard();			// line  77
+			thisGame.resetMenu();				// line 103
+
+		}
+	});
+}

@@ -25,8 +25,52 @@ body	{
 	}
 }
 
+#result-list	{
+	display: none;
+}
+
 #actor-entry	{
 	margin-top: ($head-ht + 20);
+}
+
+#actor-entry label	{
+	float: left;
+	margin-right: 2rem;
+	padding-top: 0.5rem;
+}
+
+.actor-entry__input	{
+	position: relative;
+	display: inline-block;
+	width: 30rem;
+}
+
+#actor-input	{
+	width: 100%;
+}
+
+#result-list	{
+	width: 100%;
+	position: absolute;
+	left: 0;
+	max-height: 40rem;
+	overflow-y: scroll;
+	background: white;
+}
+
+#result-list ul	{
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.result-list__item	{
+	cursor: pointer;
+	padding: 1rem;
+
+	&:hover 	{
+		background: lightgrey;
+	}
 }
 
 #try-again	{
@@ -123,6 +167,7 @@ body	{
 }
 
 #instruc-modal	{
+	display: none;
 	width: 600px;
 	height: 450px;
 	position: fixed;
