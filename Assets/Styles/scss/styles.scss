@@ -85,17 +85,17 @@ body	{
 }
 
 #alpha-list	{
-	position: relative;
+	// position: relative;
 	
-	::after 	{
-		content: " ";
-		position: absolute;
-		top: 100%;
-		left: 0;
-		width: 100%;
-		height: 200%;
-		background-color: transparent;
-	}
+	// ::after 	{
+	// 	content: " ";
+	// 	position: absolute;
+	// 	top: 100%;
+	// 	left: 0;
+	// 	width: 100%;
+	// 	height: 200%;
+	// 	background-color: transparent;
+	// }
 }
 
 .list-letter	{

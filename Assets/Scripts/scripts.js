@@ -254,6 +254,7 @@ class Game 	{
 	}
 
 	guessPuzzle(i)	{
+		$(".list-letter").off();
 		var self = this;
 		let j = i;
 		// Skip ahead to the next un-revealed letter, or to the end if finished
